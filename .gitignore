@@ -1,0 +1,6 @@
+*.t7
+*~
+*.pyc
+exp/
+data/**/images
+src/models/old
