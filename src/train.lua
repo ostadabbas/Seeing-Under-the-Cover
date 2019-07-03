@@ -22,7 +22,7 @@ function step(tag)
         set = 'train'
         if opt.ftNm ~= '' then
             model:evaluate()        -- fix all
-            local mdLast = model.modules[#model.modules]
+            local mdLast = model.modules[#model.modules]    -- only fine tune last module
             mdLast:training()       -- only fine tune last
             print('fine tune last layer')
         end
@@ -82,7 +82,7 @@ function step(tag)
             model:zeroGradParameters()
             model:backward(input, criterion:backward(output, label))
             optfn(evalFn, param, optimState)    -- optim method, weights updated
-        else    -- valid or predict
+        else    -- valid or predict , first return crt.output, gradparam,
             -- Validation: Get flipped output
             output = applyFn(function (x) return x:clone() end, output)
             local flippedOut = model:forward(flip(input))
@@ -107,12 +107,6 @@ function step(tag)
         end
         -- Calculate accuracy
         avgAcc = avgAcc + accuracy(output, label) / nIters
-        -- DB
-        --if i>2 then
-        --    break
-        --end
-        -- DB
-        --print('DB current avgAcc is', avgAcc) -- 17?
     end
 
 

@@ -35,7 +35,7 @@ function generateSample(set, idx)
 
 
     local inp = crop(img, c, s, r, opt.inputRes)    -- crop to center
-    local out = torch.zeros(dataset.nJoints, opt.outputRes, opt.outputRes)  -- 64 x 64
+    local out = torch.zeros(dataset.nJoints, opt.outputRes, opt.outputRes)  -- 64 x 64 gaussian
     for i = 1,dataset.nJoints do
         if pts[i][1] > 1 then -- Checks that there is a ground truth annotation
             drawGaussian(out[i], transform(pts[i], c, s, r, opt.outputRes), opt.hmGauss)

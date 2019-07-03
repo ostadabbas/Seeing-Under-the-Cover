@@ -9,88 +9,17 @@ local function parse(arg)
     cmd:text(' ---------- General options ------------------------------------')
     cmd:text()
     cmd:option('-expID',       'ts1', 'Experiment ID')
-    cmd:option('-dataset',     'datasetPM', 'Dataset choice: mpii | flic | SYN |AC2d | SURREAL | datasetPM, trigger different interfaces, AC2d for test purpose only ')
-    cmd:option('-dsLs',    {
-        --'SYN_RR_yu_170723_1000_G20180513_1521_P2000_A00',         -- p7 a00
-        --'SYN_RR_william_180503_1704_G20180514_1525_P2000_A00',
-        --'SYN_RR_william_180502_1509_G20180514_1704_P2000_A00',
-        --'SYN_RR_william_180502_1449_G20180513_1521_P2000_A00',
-        --'SYN_RR_shuangjun_180502_1536_G20180513_1521_P2000_A00',
-        --'SYN_RR_shuangjun_180403_1748_G20180513_1521_P2000_A00',
-        --'SYN_RR_shuangjun_180403_1734_G20180513_1521_P2000_A00',
-        --'SYN_RR_sarah_180423_1317_G20180508_2250_P2000_A00',
-        --'SYN_RR_sarah_180423_1220_G20180508_2140_P2000_A00',
-        --'SYN_RR_sarah_180423_1211_G20180514_1655_P2000_A00',
-        --'SYN_RR_sarah_171201_1045_G20180514_1731_P2000_A00',
-        --'SYN_RR_naveen_180403_1635_G20180508_2026_P2000_A00',
-        --'SYN_RR_naveen_180403_1612_G20180508_1240_P8000_A00',
-        --'SYN_RR_behnaz_180118_2009_G20180508_1121_P8000_A00',
-        --'SYN_RR_amir_180329_0624_G20180508_0316_P8000_A00',
-        'SYN_RR_shuangjun_whiteHood_180502_1536_G20180513_1521_P2000_A00',    -- ind sjl
-        'SYN_RR_shuangjun_whiteDshirt_180521_1600_G20180524_0930_P2000_A00',
-        'SYN_RR_shuangjun_rainCoat_180403_1734_G20180513_1521_P2000_A00',
-        'SYN_RR_shuangjun_niket_180522_1602_G20180524_1528_P2000_A00',
-        'SYN_RR_shuangjun_jacketgood_180522_1628_G20180524_1459_P2000_A00',
-        --'SYN_RR_shuangjun_gridDshirt_180521_1548_G20180524_0930_P2000_A00',
-        'SYN_RR_shuangjun_grayT_180521_1658_G20180524_0930_P2000_A00',
-        --'SYN_RR_shuangjun_grayDown_180521_1516_G20180524_0930_P2000_A00',
-        'SYN_RR_shuangjun_diskShirt_180403_1748_G20180513_1521_P2000_A00',
-        'SYN_RR_shuangjun_blueSnow_180521_1531_G20180524_0930_P2000_A00',
-        'SYN_RR_shuangjun_blackT_180522_1542_G20180524_0930_P2000_A00',
-        --'SYN_RR_amir_180329_0624_G20180620_1652_P2000_A35',     -- p7 a35
-        --'SYN_RR_behnaz_180118_2009_G20180620_1652_P2000_A35',
-        --'SYN_RR_naveen_180403_1612_G20180620_1652_P2000_A35',
-        --'SYN_RR_naveen_180403_1635_G20180620_1653_P2000_A35',
-        --'SYN_RR_sarah_171201_1045_G20180620_1653_P2000_A35',
-        --'SYN_RR_sarah_180423_1211_G20180620_1653_P2000_A35',
-        --'SYN_RR_sarah_180423_1220_G20180620_1653_P2000_A35',
-        --'SYN_RR_sarah_180423_1317_G20180620_1653_P2000_A35',
-        --'SYN_RR_shuangjun_diskShirt_180403_1748_G20180619_1537_P2000_A35',
-        --'SYN_RR_shuangjun_rainCoat_180403_1734_G20180619_1537_P2000_A35',
-        --'SYN_RR_shuangjun_whiteHood_180502_1536_G20180619_1536_P2000_A35',
-        --'SYN_RR_william_180502_1449_G20180620_1653_P2000_A35',
-        --'SYN_RR_william_180502_1509_G20180620_1655_P2000_A35',
-        --'SYN_RR_william_180503_1704_G20180620_1655_P2000_A35',
-        --'SYN_RR_yu_170723_1000_G20180620_1655_P2000_A35',
-        --'SYN_UNI_yu_170723_1000_G20180621_1511_P2000_A00',         -- p7 UNI a00
-        --'SYN_UNI_william_180503_1704_G20180621_1511_P2000_A00',
-        --'SYN_UNI_william_180502_1509_G20180621_1511_P2000_A00',
-        --'SYN_UNI_william_180502_1449_G20180621_1511_P2000_A00',
-        --'SYN_UNI_shuangjun_whiteHood_180502_1536_G20180621_1511_P2000_A00',
-        --'SYN_UNI_shuangjun_diskShirt_180403_1748_G20180621_1511_P2000_A00',
-        --'SYN_UNI_shuangjun_rainCoat_180403_1734_G20180621_1511_P2000_A00',
-        --'SYN_UNI_sarah_180423_1317_G20180621_1511_P2000_A00',
-        --'SYN_UNI_sarah_180423_1220_G20180621_1511_P2000_A00',
-        --'SYN_UNI_sarah_180423_1211_G20180621_1511_P2000_A00',
-        --'SYN_UNI_sarah_171201_1045_G20180621_1511_P2000_A00',
-        --'SYN_UNI_naveen_180403_1635_G20180621_1511_P2000_A00',
-        --'SYN_UNI_naveen_180403_1612_G20180621_1511_P2000_A00',
-        --'SYN_UNI_behnaz_180118_2009_G20180621_1511_P2000_A00',
-        --'SYN_UNI_amir_180329_0624_G20180621_1511_P2000_A00',
-    }, 'SYN dataset ls')
-    cmd:option('-testLs',       {
-        --'ac2d_00'
-        --'ac2d_35'
-        'ac2d_sjl_00'
-    },
-    'Dataset list for test, for AC2d dataset generation')
-    cmd:option('-GPM_ls',       {
-        --'MPI_GPM'
-        --'SURREAL_GPM'
-        --'GPM7_MPI_100'
-        --'GPM7_SURREAL_100'
-        --'GPM6_MPI_100'
-        'GPM6_SURREAL_100'
-    },
-    'GPM dataset list to be loaded for GPM data generation test')
+    cmd:option('-dataset',     'SLP', 'Dataset choice: mpii | flic | datasetPM, trigger different interfaces, AC2d for test purpose only ')
+
     cmd:option('-PMlab',     'danaLab', 'subset of PM dataset of different exp locations')       ------ PM related ------------
     cmd:option('-coverNms',  {
         'uncover',
         'cover1',
         'cover2',
     }, 'cover name list')
-    cmd:option('-ftNm',     'ftLast',   'fine tune name suffix for experiment, if yes, only last layer is in training')
-    cmd:option('-idx_subTest_PM', {1,30}, 'subject for test set idx_st idx_end')
+    cmd:option('-ftNm',     '',   'fine tune name suffix for experiment, if yes, only last layer is in training')
+    cmd:option('-idx_subTest_SLP', {1, 7}, 'subject for test set idx_st idx_end')
+    cmd:option('-idx_subTrain_SLP', {1, 90}, 'subject idx for train')
     cmd:option('-ifTsSpec',         false, 'if use specific index for testing, only for ac2d at this time')
     cmd:option('-dataDir',  '/home/jun/datasets', 'Data directory')
     --cmd:option('-expDir',   projectDir .. '/exp',  'Experiments directory')
@@ -134,11 +63,11 @@ local function parse(arg)
     cmd:text()
     cmd:text(' ---------- Training options -----------------------------------')
     cmd:text()
-    cmd:option('-nEpochs',           10, 'Total number of epochs to run, def 100') -- default 30
+    cmd:option('-nEpochs',           30, 'Total number of epochs to run, def 100') -- default 30
     cmd:option('-lastEpoch',          0,    'Last epoch position, it will be updated ifi saved in previous session')
-    cmd:option('-trainIters',       300, 'Number of train iterations per epoch') -- default 8000
+    cmd:option('-trainIters',       8000, 'Number of train iterations per epoch') -- default 8000
     cmd:option('-trainBatch',          4, 'Mini-batch size, def 6')
-    cmd:option('-validIters',       135, 'Number of validation iterations per epoch')
+    cmd:option('-validIters',       135, 'Number of validation iterations per epoch, overide in some ds to use all set batch 1 such as datasetPM ')
     cmd:option('-validBatch',          1, 'Mini-batch size for validation')
     cmd:option('-nValidImgs',       1000, 'Number of images to use for validation. Only relevant if randomValid is set to true')
     cmd:option('-randomValid',     false, 'Whether or not to use a fixed validation set of 2958 images (same as Tompson et al. 2015)')
@@ -163,7 +92,7 @@ local function parse(arg)
     cmd:option('-ifDemo',           false,  'if run demo code to show the result of pose estimation')
     cmd:option('-demoIdxs',         {1,2,3}, 'show estimation result from the target index in test data')
     cmd:option('-ifDsp',            false,  'if run down sample operation before evaluation')
-    cmd:option('-if_PMRGB',         false,  'if datasetPM read in RGB instead of IR')
+    cmd:option('-if_SLPRGB',         false,  'if SLP read in RGB instead of IR')
     cmd:option('-dspRes',          128,    'downSample resolution ')
     cmd:text(' ---------- evaluation options ---------------------------------------')
     cmd:option('-nForceIters',      0,    'force iteration numbers to overload the dataset iteration numbers')
@@ -174,7 +103,7 @@ local function parse(arg)
     --opt.expDir = paths.concat(opt.expDir, opt.dataset)  -- /exp/dataset/expID
     -- keep expDir root position
     opt.dataDir = paths.concat(opt.dataDir, opt.dataset)    -- datasets/SYN one level further to dataset
-    if opt.dataset == 'datasetPM' then
+    if opt.dataset == 'datasetPM' or opt.dataset == 'SLP' then
         opt.dataDir = paths.concat(opt.dataDir, opt.PMlab)      -- add lab path to fd
     end
 
@@ -182,7 +111,7 @@ local function parse(arg)
         opt.expID = opt.testLs[1]
     elseif opt.dataset == 'GPM_ds' then
         opt.expID = opt.GPM_ls[1]       -- actually a list but only named after first one,
-    elseif opt.dataset == 'datasetPM' then      -- expID autoNamed
+    elseif opt.dataset == 'SLP' or opt.dataset == 'datasetPM' then      -- overide default expID to autoname with cover conditions
         local suffix = ''
         for i,covNm  in ipairs(opt.coverNms) do
             if covNm:match('u') then
@@ -194,13 +123,11 @@ local function parse(arg)
             end
         end
         local str_1  = 'cov'
-        if opt.if_PMRGB then
+        if opt.if_SLPRGB then
             str_1 = str_1 .. 'RGB'          -- if add RGB to indicate what PM read in
         end
         opt.expID = str_1 .. '-' .. suffix
     end
-
-
 
     local expIDtmp
     if opt.finalPredictions and opt.branch ~= 'none' then
@@ -229,12 +156,6 @@ local function parse(arg)
         if opt.nForceIters >0  then
             expIDtmp = expIDtmp .. string.format('_it%d', opt.nForceIters)
         end
-        --if opt.dataset == 'datasetPM' then
-        --    opt.save = paths.concat(opt.expDir, opt.dataset, opt.PMlab, expIDtmp)
-        --else
-        --    opt.save = paths.concat(opt.expDir, opt.dataset, expIDtmp)   -- add branchNm branch nm  expFd/datasetPM/ expIDtmp
-        --end
-         -- the expIDtmp is  branch_<expID>
     elseif opt.loadModel ~= 'none' then
         local hyphen
         if opt.finalPredictions then
@@ -292,7 +213,7 @@ local function parse(arg)
         --opt.save = paths.concat(opt.expDir, opt.dataset, expIDtmp)
     end
 
-    if opt.dataset == 'datasetPM' then
+    if opt.dataset == 'datasetPM' or opt.dataset == 'SLP' then
         opt.save = paths.concat(opt.expDir, opt.dataset, opt.PMlab, expIDtmp)
     else
         opt.save = paths.concat(opt.expDir, opt.dataset, expIDtmp)   -- add branchNm branch nm  expFd/datasetPM/ expIDtmp
@@ -366,9 +287,9 @@ if opt.branch ~= 'none' or opt.continue then -- not prediction from previous exp
     end
 else epoch = 1 end
 
-    if opt.finalPredictions or opt.ifDemo then
-        opt.nEpochs = 0 -- if predict
-    end
+if opt.finalPredictions or opt.ifDemo then
+    opt.nEpochs = 0 -- if predict
+end
 
     -- other wise, take everything as default set instead of read from files.
 
@@ -384,5 +305,5 @@ if not opt.ifEval then
     torch.save(opt.save .. '/options.t7', opt)
 end
 
-
+--print('idx_test_PM is', opt.idx_subTest_SLP)
 end

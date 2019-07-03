@@ -10,6 +10,7 @@
 -- joints_gt from the joints_gt_MPI N x 16 x 2
 -- bedIR training and test , set specific person for test.
 -- limited by subjs, set valid and test as one.
+-- history: 19.3.21 override the valid iters to whole sets
 
 local M = {}
 local dir = require 'pl.dir'
@@ -36,10 +37,6 @@ function Dataset:__init()   -- opt.idxRef.[train, valid, test],
                         {14,9,4},   {14,15,4},  {15,16,4}}
     print('generating datasetPM dataset')
 
-    -- list all file names (abs) and joints_gts, cat them together
-    -- dtSizes list size of all datasets
-    -- trainIdxs and testIdxs,
-    -- if random , then validIdxs  separate  train part
     local imgPths = {}
     local tmpPths = {}
     local idxBase_train = 0
@@ -62,12 +59,29 @@ function Dataset:__init()   -- opt.idxRef.[train, valid, test],
     self.centers = torch.Tensor()
     self.scales = torch.Tensor()
     local subjLs = dir.getdirectories(opt.dataDir)
-    --print('data dir is ', opt.dataDir)
-    --print('subjLs is', subjLs)
-    table.sort(subjLs)
+
+    if #subjLs < opt.idx_subTest_SLP[2] then
+        print('there are subjLs',  #subjLs)
+
+        print('test index surpasses the existing data')
+    end
+
+    -- build up the train index and test indices.
+    local idx_subTest = {}
+    for i = opt.idx_subTest_SLP[1], opt.idx_subTest_SLP[2] do -- generate a test index list
+        --idx_subTest[i] = i
+        --idx_subTest.insert(i)
+        table.insert(idx_subTest, i)
+    end
+
+    local idx_subTrain = {}
+    for i = opt.idx_subTrain_SLP[1], opt.idx_subTrain_SLP[2] do -- generate a test index list
+        table.insert(idx_subTrain, i)
+    end
+
     for i, subjFd in ipairs(subjLs) do
         local mdNm , jtsNm
-        if opt.if_PMRGB then
+        if opt.if_SLPRGB then
             mdNm = 'RGB'
             --jtsNm = 'joints_gt.mat'
             jtsNm = 'joints_gt_RGB.mat'
@@ -88,7 +102,7 @@ function Dataset:__init()   -- opt.idxRef.[train, valid, test],
             -- loop the cover
             for i, covNm in ipairs(opt.coverNms) do
                 local covFd = path.join(modalFd, covNm)
-                tmpPths = dir.getfiles(covFd, '*.png')
+                tmpPths = dir.getfiles(covFd, '*.png')  -- num of images
                 table.sort(tmpPths)
                 if if_dbg then
                     --print('cover name is', covNm)
@@ -103,23 +117,21 @@ function Dataset:__init()   -- opt.idxRef.[train, valid, test],
                 lenTorsos = lenTorsos:cat(lenTorsosTmp:float(),1)
                 local n_smplTmp = #tmpPths
                 -- add index to the train and test
-                local idx_subTest = {}
-                for i = opt.idx_subTest_PM[1], opt.idx_subTest_PM[2] do -- generate a test index list
-                    idx_subTest[i] = i
-                end
-                local subjId = tonumber(subjFd:match('%d%d%d%d%d'))
-                --if utils.inTable(subjId, opt.idx_subTest_PM) then
+
+                local subjId = tonumber(subjFd:match('%d%d%d%d%d')) -- fd names
+                --if utils.inTable(subjId, opt.idx_subTest_SLP) then
                 if utils.inTable(subjId, idx_subTest) then
                     idxsTest= idxsTest:cat(utils.GenVecFromTo(idxBase_test+1, idxBase_test+n_smplTmp))
                     idxsValid = idxsValid:cat(utils.GenVecFromTo(idxBase_test+1, idxBase_test + n_smplTmp))
                     idxBase_test = idxBase_test + n_smplTmp
-                else
+                elseif utils.inTable(subjId, idx_subTrain) then
                     idxsTrain = idxsTrain:cat(utils.GenVecFromTo(idxBase_train+1, idxBase_train + n_smplTmp))
                     idxBase_train = idxBase_train + n_smplTmp
                 end
             end
         end
     end
+
     if not opt.idxRef then
         opt.idxRef = {}
         opt.idxRef.test = idxsTest
@@ -146,6 +158,9 @@ function Dataset:__init()   -- opt.idxRef.[train, valid, test],
     -- update opts
     opt.testIters = self.nsamples.test
     opt.testBatch = 1
+    -- valid the same
+    opt.validIters = self.nsamples.valid
+    opt.validBatch = 1
 end
 
 function Dataset:size(set)

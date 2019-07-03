@@ -8,16 +8,12 @@ torch.setnumthreads(1)
 local Dataloader = paths.dofile('util/dataloader.lua')
 print('creating data loader...')
 loader = Dataloader.create(opt, dataset, ref)  -- loader[set] { valid, train, test}
--- wha tis ref here?
 -- Initialize logs
 ref.log = {}
 ref.log.train = Logger(paths.concat(opt.save, 'train.log'), opt.continue)   -- continue true or false
 ref.log.valid = Logger(paths.concat(opt.save, 'valid.log'), opt.continue)
---if not opt.ifEval then
---    print('Saving everything to: ' .. opt.save)
---    os.execute('mkdir -p ' .. opt.save)
---end
 -- Main training loop
+
 if opt.finalPredictions then
     opt.nEpochs = 0  -- clear the epoches automatically
 end

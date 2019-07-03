@@ -26,7 +26,8 @@ else torch.seed() end
 
 -- Initialize dataset
 if not dataset then
-    local Dataset = paths.dofile(projectDir .. '/src/util/dataset/' .. opt.dataset .. '.lua') -- projectDir: home/pose-hg-train , there is only mpii, get the class Dataset
+    --local Dataset = paths.dofile(projectDir .. '/src/util/dataset/' .. opt.dataset .. '.lua') -- projectDir: home/pose-hg-train , there is only mpii, get the class Dataset
+    local Dataset = paths.dofile('util/dataset/'.. opt.dataset .. '.lua')
     -- dataset not explicitly set, so flic should not work here
     dataset = Dataset()
 end

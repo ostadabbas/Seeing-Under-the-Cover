@@ -37,7 +37,7 @@ function createModel()
 -- from ds n_joints
     local inp = nn.Identity()()
     -- Initial processing of the image
-    local cnv1_ = nnlib.SpatialConvolution(3,64,7,7,2,2,3,3)(inp)           -- 128
+    local cnv1_ = nnlib.SpatialConvolution(3,64,7,7,2,2,3,3)(inp)           -- 128, ch_in, ch_out, k,k, s,s, p,p  (kernel stride padding)
     local cnv1 = nnlib.ReLU(true)(nn.SpatialBatchNormalization(64)(cnv1_))
     local r1 = Residual(64,128)(cnv1)
     local pool = nnlib.SpatialMaxPooling(2,2,2,2)(r1)                       -- 64

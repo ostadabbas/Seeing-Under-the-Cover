@@ -23,7 +23,7 @@ function DataLoader.create(opt, dataset, ref)
 
    for i, split in ipairs{'train', 'valid'} do  -- only train and valid split?
       if opt[split .. 'Iters'] > 0 then
-         loaders[split] = M.DataLoader(opt, dataset, ref, split)
+         loaders[split] = M.DataLoader(opt,  dataset, ref, split)
       end
    end
 
@@ -38,7 +38,7 @@ function DataLoader:__init(opt, dataset, ref, split)    -- split (test, train...
 
     local function init()
         _G.opt, _G.dataset, _G.ref, _G.split = opt, dataset, ref, split -- into global
-        -- where loadData in.  no opt, no dataset,
+        -- in thread space, all func can access now
         paths.dofile('../ref.lua')  -- all have refs in threads, channels, global var, dataset ...  in threads
     end
 
@@ -69,11 +69,12 @@ function DataLoader:run()   -- only run iters x batchsizes jobs
     else
         iters = self.iters
     end
+
     local size =iters * self.batchsize
 
     local idxs = torch.range(1,self.nsamples)   -- just 1 to N, if empty, what happen?
     print('current split is', self.split)
-    print('there are samples,', self.nsamples)
+    print('there are samples in the set', self.nsamples)
     for i = 2,math.ceil(size/self.nsamples) do
         idxs = idxs:cat(torch.range(1,self.nsamples))   -- 1,2,...n, 1,2,...
     end -- fill idx multiple round according to nsamples
@@ -83,7 +84,7 @@ function DataLoader:run()   -- only run iters x batchsizes jobs
     idxs = opt.idxRef[self.split]:index(1,idxs:long()):long()
 
     local n, idx, sample = 0, 1, nil
-    print('the iter size is', size)
+    print('sample used is', size)
     local function enqueue()    -- make threads fully occupied
         while idx <= size and threads:acceptsjob() do   -- narrow(dim, ind, size)
             local indices = idxs:narrow(1, idx, math.min(self.batchsize, size - idx + 1))   -- each time idx jump a block

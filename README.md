@@ -1,88 +1,80 @@
-# Stacked Hourglass Networks for Human Pose Estimation (Training Code)
+![multiModa](images/multimodal_imaging.png)
+
+# Stacked Hourglass Networks for Human Pose on SLP 
 
 This is the training pipeline used for:
+Shuangjun Liu, Sarah Ostadabbas, 
+**Seeing Under the Cover: A Physics Guided Learning
+Approach for In-Bed Pose Estimation?**,
+[arXiv](http://arxiv.org/replace) !!! replace !!!!, MICCAI, 2019.
 
-Alejandro Newell, Kaiyu Yang, and Jia Deng,
-**Stacked Hourglass Networks for Human Pose Estimation**,
-[arXiv:1603.06937](http://arxiv.org/abs/1603.06937), 2016.
+In this work, we employ [stacked hourglass](https://github.com/princeton-vl/pose-hg-train) to demonstrate Under the Cover Imaging via Thermal Diffusion (UCITD) via training on our sleep dataset (SLP). We interfaced our SLP dataset to original work to facilitate the training and testing process. Also 
 
-A pretrained model is available on the [project site](http://www-personal.umich.edu/~alnewell/pose). You can use the option `-loadModel path/to/model` to try fine-tuning. 
+A pretrained model under home settings under all cover conditions are [provided](http://www.coe.neu.edu/Research/AClab/SLP). 
 
-To run this code, make sure the following are installed:
+## Preparation 
+This code is emplemented on Torch7, 
+to run this code, make sure the following are installed:
 
 - [Torch7](https://github.com/torch/torch7)
 - hdf5
 - cudnn
 
-## Getting Started ##
+Download SLP dataset from our project (website)[https://web.northeastern.edu/ostadabbas/2019/06/27/multimodal-in-bed-pose-estimation/]
 
-Download the full [MPII Human Pose dataset](http://human-pose.mpi-inf.mpg.de), and place the `images` directory in `data/mpii`. From there, it is as simple as running `th main.lua -expID test-run` (the experiment ID is arbitrary). To run on [FLIC](http://bensapp.github.io/flic-dataset.html), again place the images in a directory `data/flic/images` then call `th main.lua -dataset flic -expID test-run`.
+Download this repository. In opts.lua, there are several key parameters need to be taken care of including: 
 
-Most of the command line options are pretty self-explanatory, and can be found in `src/opts.lua`. The `-expID` option will be used to save important information in a directory like `pose-hg-train/exp/mpii/test-run`. This directory will include snapshots of the trained model, training/validations logs with loss and accuracy information, and details of the options set for that particular experiment.
+- dataset,  SLP  
+- PMLab, 	danaLab (for home setting) | simLab (for hospital setting) 
+- dataDir,  path/to/SLP 
+- expDIR, 	where results and trained model will be saved here. 
+- if_SLPRGB, if is the RGB modality otherwise, IR data will be loaded. 
 
-## Running experiments ##
+## Running the Pose estimation  
+Original work employs expID option to distinguish different experiments. However, we implemented an auto-naming mechanism. After setting the corresponding parameters, expID will be generated automatically. This includes the cover conditons, the modality emplyed and also if fine tuning is employed. Test result is also auto named. 
 
-There are a couple features to make experiments a bit easier:
+** Naming rule **  
+for trained model 
+expDir/SLP/labNm[simLab|danaLab]/cov[RGB]-[u,1,2]
+for testing result 
+expDir/SLP/labNm[simLab|danaLab]/cov[RGB]-[u,1,2]/ `[model employed]_[cover cases]`
 
-- Experiment can be continued with `th main.lua -expID example-exp -continue` it will pick up where the experiment left off with all of the same options set. But let's say you want to change an option like the learning rate, then you can do the same call as above but add the option `-LR 1e-5` for example and it will preserve all old options except for the new learning rate.
+Basic command (options can be added accordingly)
+** Training **
+To train from scrath 
+`th main.lua` 
 
-- In addition, the `-branch` option allows for the initialization of a new experiment directory leaving the original experiment intact. For example, if you have trained for a while and want to drop the learning rate but don't know what to change it to, you can do something like the following: `th main.lua -branch old-exp -expID new-exp-01 -LR 1e-5` and then compare to a separate experiment `th main.lua -branch old-exp -expID new-exp-02 -LR 5e-5`.
+To continue
+`th main.lua continue`
 
-In `src/misc` there's a simple script for monitoring a set of experiments to visualize and compare training curves.
+** Testing **
+`th main.lua -branch path/to/trained/model -finalPredictions -nEpochs 0` 
 
-#### Getting final predictions ####
+You can specify which section of the data is employed for training and which section for testing by setting `idx_subTest_SLP`, `idx_subTrain_SLP`, with {idxStart, idxEnd} format.  
 
-To generate final test set predictions for MPII, you can call:
+To use pretrained hourglass, please download the [model](http://www-personal.umich.edu/~alnewell/pose/umich-stacked-hourglass.zip) first. Then use command 
+`th main.lua -loadModel path/to/pretrained/model -finalPredictions -nEpochs 0`  
 
-`th main.lua -branch your-exp -expID final-preds -finalPredictions -nEpochs 0`
+To change cover conditions,  please change the option `-converNms`. Considering the cover cases essentially be scaled up to many cases, so we believe chaning them in document is more proper than bulky command options.  
+To change modalities,  use `-if_SLPRGB`.  
 
-This assumes there is an experiment that has already been run. If you just want to provide a pre-trained model, that's fine too and you can call:
+To fine tune last layer give fine tune name by  `-ftNm`. In the paper, we didn't use the fine tunning one as our dataset is large enough to support large scale network training. 
 
-`th main.lua -expID final-preds -finalPredictions -nEpochs 0 -loadModel /path/to/model`
+These options are both effective for training and testing. So you can easily configure cross modality and cross setting test to check how modalities and cover affect the modal performance. For example, you can easily use model trained on uncovered RGB on thick covered thermal data segmentation by mulnipulating provided settings.  
 
-#### Training accuracy metric ####
+Limited by space in original paper, not all possibly combinations result is provided. Users can further explore with provided tool to see how modality and cover conditions affect the model performance. 
 
-For convenience during training, the accuracy function evaluates PCK by comparing the output heatmap of the network to the ground truth heatmap. The normalization in this case will be slightly different than the normalization done when officially evaluating on FLIC or MPII. So there will be some discrepancy between the numbers, but the heatmap-based accuracy still provides a good picture of how well the network is learning during training.
+** Generate PCK Metrics **  
+For training convenience, accuracy during training is based on difference between predicted and ground truth heatmap. To generate conventional PCK, use script `s_genPCK.lua` with specified result file from evaluation.  
 
-## Final notes ##
+** PCK plot ** 
+We provide exact script usded in paper for PCK plot generation. `drawCrossEval.lua`. 
+You need to set the tsLs to include all the experiment result you want to show in this plot.  
+Also , set legends accordingly for each of the test.  Result will be shown and saved in pdf format.  
 
-In the paper, the training time reported was with an older version of cuDNN, and after switching to cuDNN 4, training time was cut in half. Now, with a Titan X NVIDIA GPU, training time from scratch is under 3 days for MPII, and about 1 day for FLIC.
-
-#### pypose/ ####
-
-Included in this repository is a folder with a bunch of old python code that I used. It hasn't been updated in a while, and might not be totally functional at the moment. There are a number of useful functions for doing evaluation and analysis on pose predictions and it is worth digging into. It will be updated and cleaned up soon.
-
-#### Questions? ####
-
-I am sure there is a lot not covered in the README at the moment so please get in touch if you run into any issues or have any questions!
-
-## New function for synthetic human based training 
-I further added preprocessing session of the data for SYN training purpose including white noise, gaussian and canny edge generator. 
-Following options need to be taken care of. 
-- dataset: which dataset is used for training/testing. Usually, we employ SYN for training, corresponding AC2d for testing. 
-- dsLs: which subject SYN dataset is employed. This gives you the flexibility to choose what dataset to be included in the SYN training process. 
-- testLs: which test dataset for AC2d is used for test purpose. 
-- noiseType:	0 for no noise, 1 for white noise.  
-- ifGaussFt:	if apply gaussian filter on images.   
-- ifCanny: 		if apply canny edge operation on images. 
-...
-Train:	process is similar to vanilla hg. 
-	th main.lua -expID test-run
-
-Test: 	
-	th main.lua -branch your-exp -expID final-preds -finalPredictions -nEpochs 0
-- branch will load pretrained weights.  
-- expID here is the name for this experiment 
-file structure: 
-branch,  <datasetFd>/<expName>
-To load a model: 
-	th main.lua -expID final-preds -finalPredictions -nEpochs 0 -loadModel /path/to/model
-
-## GPM test
-This code is also employed for GPM test purpose. 
-in options: 
-- GPM_ls list the GPM generated folder for test. 
-
+** video processing ** 
+We also provide a script for video processing,  `s_genSkelVid.lua`. You need to specify the video you want to process as vidNm in the script.  To run, 
+`th s_genSkelVid.lua -branch datasetPM/danaLab/umich-stacked-hourglass-ftLast--cov-u12 -finalPredictions` 
 
 ## Acknowledgements ##
 

@@ -33,7 +33,7 @@ function getPreds(hm) -- positive joint idx  preds  nBatch x nJoints x2
     if hm:size():size() == 3 then hm = hm:view(1, hm:size(1), hm:size(2), hm:size(3)) end
     assert(hm:size():size() == 4, 'Input must be 4-D tensor')
     local max, idx = torch.max(hm:view(hm:size(1), hm:size(2), hm:size(3) * hm:size(4)), 3)
-    local preds = torch.repeatTensor(idx, 1, 1, 2):float()  -- 1x1x2 all idx max
+    local preds = torch.repeatTensor(idx, 1, 1, 2):float()  -- 1x1x2 same idx extend to 2
     preds[{{}, {}, 1}]:apply(function(x) return (x - 1) % hm:size(4) + 1 end)   -- x down scale + 1
     preds[{{}, {}, 2}]:add(-1):div(hm:size(3)):floor():add(1)   -- modulo operation,
     local predMask = max:gt(0):repeatTensor(1, 1, 2):float()    -- great than

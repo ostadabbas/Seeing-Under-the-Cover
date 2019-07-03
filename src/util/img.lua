@@ -18,7 +18,7 @@ end
 
 function getTransform(center, scale, rot, res)
     -- res for resolution
-    -- trans old coord to new coord, world to center one
+    -- trans old coord to new coord, left up corner to center one, scale up the coord to res.
     -- map original to the res similar size coord / scale
     local h = 200 * scale
     local t = torch.eye(3)
@@ -95,22 +95,22 @@ function crop(img, center, scale, rot, res)
 
     -- Modify crop approach depending on whether we zoom in/out
     -- This is for efficiency in extreme scaling cases
-    local scaleFactor = (200 * scale) / res -- ratio to image res 256
+    local scaleFactor = (200 * scale) / res -- ori human ht to image res 256  scale = h_ht/200
     if scaleFactor < 2 then scaleFactor = 1 -- person too small
     else
-        local newSize = math.floor(math.max(ht,wd) / scaleFactor)   -- large
+        local newSize = math.floor(math.max(ht,wd) / scaleFactor)   -- whole img size
         if newSize < 2 then
            -- Zoomed out so much that the image is now a single pixel or less
            if ndim == 2 then newImg = newImg:view(newImg:size(2),newImg:size(3)) end    -- add one channel
            return newImg
         else
-           tmpImg = image.scale(img,newSize)    -- scaled image, person similar to res
+           tmpImg = image.scale(img,newSize)    -- scaled image, person similar to res, max dim to newSize
            ht,wd = tmpImg:size(2),tmpImg:size(3)
         end
     end
 
     -- Calculate upper left and bottom right coordinates defining crop region
-    local c,s = center:float()/scaleFactor, scale/scaleFactor
+    local c,s = center:float()/scaleFactor, scale/scaleFactor   -- (ht/200)(ht/res) = res /200
     local ul = transform({1,1}, c, s, 0, res, true) -- new in  old coords
     local br = transform({res+1,res+1}, c, s, 0, res, true)
     if scaleFactor >= 2 then br:add(-(br - ul - res)) end    -- br down outside res, then  make it to nearest bl in original area
@@ -320,8 +320,7 @@ end
 function drawSkeleton_demo(input, hms, coords)
 
     local im = input:clone()
-    print('im size is', im:size())
-
+    --print('im size is', im:size())
     local pairRef = {
         {1,2},      {2,3},      {3,7},
         {4,5},      {4,7},      {5,6},
