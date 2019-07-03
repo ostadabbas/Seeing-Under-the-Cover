@@ -78,5 +78,5 @@ We also provide a script for video processing,  `s_genSkelVid.lua`. You need to 
 
 ## Acknowledgements ##
 
-Thanks to Soumith Chintala, this pipeline is largely built on his example ImageNet training code available at:
-[https://github.com/soumith/imagenet-multiGPU.torch](https://github.com/soumith/imagenet-multiGPU.torch)
+This pipeline is largely built on original stacked hourglass code available at 
+[https://github.com/princeton-vl/pose-hg-train](https://github.com/princeton-vl/pose-hg-train)
