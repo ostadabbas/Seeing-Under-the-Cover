@@ -77,7 +77,7 @@ For training convenience, accuracy during training is based on difference betwee
 
 ### PCK plot ###
 
-We provide exact script usded in paper for PCK plot generation. `drawCrossEval.lua`. 
+We provide exact script used in paper for PCK plot generation. `drawCrossEval.lua`. 
 You need to set the tsLs to include all the experiment result you want to show in this plot.  
 Also , set legends accordingly for each of the test.  Result will be shown and saved in pdf format.  
 
