@@ -6,7 +6,7 @@ This is the training pipeline used for:
 Shuangjun Liu, Sarah Ostadabbas, 
 **Seeing Under the Cover: A Physics Guided Learning
 Approach for In-Bed Pose Estimation?**,
-[arXiv](http://arxiv.org/replace) !!! replace !!!!, MICCAI, 2019.
+[arXiv.1907.02161](https://arxiv.org/abs/1907.02161), MICCAI, 2019.
 
 In this work, we employ [stacked hourglass](https://github.com/princeton-vl/pose-hg-train) to demonstrate Under the Cover Imaging via Thermal Diffusion (UCITD) via training on our sleep dataset (SLP). We interfaced our SLP dataset to original work to facilitate the training and testing process. Also 
 
