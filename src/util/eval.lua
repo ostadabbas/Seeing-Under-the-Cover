@@ -153,11 +153,12 @@ function displayPCK(dists, part_idx, label, title, svFd, show_key, idx_ephz, PCK
     if svFd then        -- save to file
         gnuplot.raw('set terminal font "Times, 30"')
         gnuplot.pdffigure(paths.concat(svFd,title .. '.pdf'))
+        --print('save pdf to', paths.concat(svFd,title .. '.pdf'))
         gnuplot.raw('set bmargin 5 lmargin 10')
         --gnuplot.raw('set lmargin 10')
         --gnuplot.raw('set key font "Times,30" right bottom')
         if not show_key then gnuplot.raw('unset key')
-         else gnuplot.raw('set key font "Times,20" outside right bottom') end    -- set 4 times bigger
+         else gnuplot.raw('set key font "Times,18" outside right bottom') end    -- set 4 times bigger
         gnuplot.raw('set xrange [0:.5]')
         gnuplot.raw('set yrange [0:1]' )
         gnuplot.raw('set tics font ", 20')

@@ -14,17 +14,45 @@ paths.dofile('ref.lua')        -- ds information
 
 
 -- for sim all cover with RGB cover cases full network training
-opt.evalNm = 'simLab_covs_full'      -- show performance over cover conditions
+--opt.evalNm = 'simLab_covs_full_basic'      -- show performance over cover conditions
+--local tsLs = {
+--    'SLP/simLab/cov-u12_cov-u',
+--    'SLP/simLab/cov-u12_cov-1',
+--    'SLP/simLab/cov-u12_cov-2',
+--    'SLP/simLab/cov-u12_cov-u12',
+--    'SLP/simLab/umich-stacked-hourglass_covRGB-u',
+--    'SLP/simLab/umich-stacked-hourglass_covRGB-1',
+--    'SLP/simLab/umich-stacked-hourglass_covRGB-2',
+--    'SLP/simLab/umich-stacked-hourglass_covRGB-u12',
+--    'SLP/simLab/umich-stacked-hourglass_cov-u12',
+--    --'SLP/simLab/covRGB-u12_covRGB-u12'
+--}
+--local legends = {
+--    'hg(UCITD)-uncover',
+--    'hg(UCITD)-cover1',
+--    'hg(UCITD)-cover2',
+--    'hg(UCITD)-allCover',
+--    'hg-RGBuncover',
+--    'hg-RGBcover1',
+--    'hg-RGBcover2',
+--    'hg-RGBallCover',
+--    'hg-allCover',
+--    --'hg(SLP)-RGB'
+--    }
+
+-- dana all cover cases *********************
+opt.evalNm = 'danaLab_covs_full_basic'      -- show performance over cover conditions
 local tsLs = {
-    'datasetPM/simLab/cov-u12_cov-u',
-    'datasetPM/simLab/cov-u12_cov-1',
-    'datasetPM/simLab/cov-u12_cov-2',
-    'datasetPM/simLab/cov-u12_cov-u12',
-    'datasetPM/simLab/umich-stacked-hourglass_covRGB-u',
-    'datasetPM/simLab/umich-stacked-hourglass_covRGB-1',
-    'datasetPM/simLab/umich-stacked-hourglass_covRGB-2',
-    'datasetPM/simLab/umich-stacked-hourglass_covRGB-u12',
-    'datasetPM/simLab/umich-stacked-hourglass_cov-u12',
+    'SLP/danaLab/cov-u12_cov-u',
+    'SLP/danaLab/cov-u12_cov-1',
+    'SLP/danaLab/cov-u12_cov-2',
+    'SLP/danaLab/cov-u12_cov-u12',
+    'SLP/danaLab/umich-stacked-hourglass_covRGB-u',
+    'SLP/danaLab/umich-stacked-hourglass_covRGB-1',
+    'SLP/danaLab/umich-stacked-hourglass_covRGB-2',
+    'SLP/danaLab/umich-stacked-hourglass_covRGB-u12',
+    'SLP/danaLab/umich-stacked-hourglass_cov-u12',
+    --'SLP/danaLab/covRGB-u12_covRGB-u12'
 }
 local legends = {
     'hg(UCITD)-uncover',
@@ -34,36 +62,10 @@ local legends = {
     'hg-RGBuncover',
     'hg-RGBcover1',
     'hg-RGBcover2',
-    'hg-RGB',
-    'hg-LWIR',
+    'hg-RGBallCover',
+    'hg-allCover',
+    --'hg(SLP)-RGB'
     }
-
--- dana all cover cases *********************
---opt.evalNm = 'danaLab_covs_ftLast'      -- show performance over cover conditions
---local tsLs = {
---    'datasetPM/danaLab/umich-stacked-hourglass-ftLast--cov-u12_cov-u',
---    'datasetPM/danaLab/umich-stacked-hourglass-ftLast--cov-u12_cov-1',
---    'datasetPM/danaLab/umich-stacked-hourglass-ftLast--cov-u12_cov-2',
---    'datasetPM/danaLab/umich-stacked-hourglass-ftLast--cov-u12_cov-u12',
---    'datasetPM/danaLab/umich-stacked-hourglass_covRGB-u',
---    'datasetPM/danaLab/umich-stacked-hourglass_covRGB-1',
---    'datasetPM/danaLab/umich-stacked-hourglass_covRGB-2',
---    'datasetPM/danaLab/umich-stacked-hourglass_covRGB-u12',
---    'datasetPM/danaLab/umich-stacked-hourglass_cov-u12',
---}
---
---local legends = {
---    'hg(UCITD)-uncover',
---    'hg(UCITD)-cover1',
---    'hg(UCITD)-cover2',
---    'hg(UCITD)-allCover',
---    'hg-RGBuncover',
---    'hg-RGBcover1',
---    'hg-RGBcover2',
---    'hg-RGB',
---    'hg-LWIR',
---    }
-
 local dists = {}
 local ifSvIm = true     -- save plot
 --local evalFd = '/home/jun/exp/pose-hg-train/eval'
@@ -83,11 +85,8 @@ end
 
 for i = 1, #tsLs  do
     local predPth = paths.concat(opt.expDir,tsLs[i],'final_preds.h5')
+    print('reading path', predPth)
     local predFile = hdf5.open(predPth)
-    --print(predFile)
-    -- DB, list all the fields
-    --print('the content in the hdf5 file is')
-    --for k,v in pairs(predFile:all()) do print(k,'\n') end
     local preds = predFile:read('preds'):all()
     --local joints_gt = predFile:read('joints_gt'):all()
     local lenTorsos = predFile:read('lenTorsos'):all()
@@ -118,5 +117,5 @@ displayPCK(dists, {12,15}, legends, 'Elbow', evalSpecFd, false, 4)
 gnuplot.raw('unset multiplot')
 
 gnuplot.figure(2)
-displayPCK(dists,{1,2,5,6,9,10,11,12,13,14,15,16},legends,'total',evalSpecFd,true,4 )
+displayPCK(dists,{1,2,5,6,9,10,11,12,13,14,15,16},legends,'total', evalSpecFd,true,4 )
 

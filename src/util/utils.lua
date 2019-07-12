@@ -73,11 +73,7 @@ local function ts2cvImg(img)
     if img:size(1) == 3 then -- if rgb
         img_cv = img:index(1, torch.LongTensor{3,2,1}):clone()
     end
-    --print('image cv size', img_cv:size())
     img_cv = img_cv:permute(2,3,1)  -- channel back
-    -- stg 1  just double back
-    --img_cv = img_cv:double()
-    --stg 2 multi 255 and change to byte
     img_cv = img_cv*255
     img_cv = img_cv:byte()
     return img_cv

@@ -6,7 +6,9 @@
 
 paths.dofile('ref.lua')        -- ds information img , eval inside there
 
-local tsFd = 'datasetPM/simLab/cov-u12_cov-u12'
+local tsFd
+--tsFd = 'datasetPM/simLab/cov-u12_cov-u12'
+tsFd = 'SLP/danaLab/cov-u12_cov-u12'
 local tsLs = {tsFd}
 local step = 135
 
@@ -50,4 +52,4 @@ print('PCK result for different subject is')
 for idx, pck in ipairs(PCK_subjs) do
     print('idx:', idx, 'pck0.1:', pck[1], 'pck0.2', pck[2])
 end
-print('total PCK is', PCK_total)
+print('total PCK(0.1~0.5) is', PCK_total)

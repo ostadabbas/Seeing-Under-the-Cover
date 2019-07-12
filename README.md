@@ -62,19 +62,17 @@ To use pretrained hourglass, please download the [model](http://www-personal.umi
 `th main.lua -loadModel path/to/pretrained/model -finalPredictions -nEpochs 0`  
 
 ### Options ###
-To change cover conditions,  please change the option `-converNms`. Considering the cover cases essentially be scaled up to many cases, so we believe chaning them in document is more proper than bulky command options.  
+To change cover conditions,  please change the option `-converNms`. Please feed in cover options in a string separated with space for example, `-coverNms 'cover1 cover2 uncover'`  
 To change modalities,  use `-if_SLPRGB`.  
+
+The training and testing data can be also controlled with `-idx_subTest_SLP` and `-idx_subTrain_SLP` with syntax `-idx_sub[Test|Train]_SLP '<idx_start> <idx_end>'` to indicates which subjects ares used for test/train.
 
 To fine tune last layer give fine tune name by  `-ftNm`. In the paper, we didn't use the fine tunning one as our dataset is large enough to support large scale network training. 
 
-These options are both effective for training and testing. So you can easily configure cross modality and cross setting test to check how modalities and cover affect the modal performance. For example, you can easily use model trained on uncovered RGB on thick covered thermal data segmentation by mulnipulating provided settings.  
+These options are both effective for training and testing. So you can easily configure cross modality and cross setting test to check how modalities and cover affect the modal performance. For example, you can easily use model trained on uncovered IR on thick covered RGB data by with provided options.  
 
 Limited by space in original paper, not all possibly combinations result is provided. Users can further explore with provided tool to see how modality and cover conditions affect the model performance. 
-
-### Generate PCK Metrics ###
-
-For training convenience, accuracy during training is based on difference between predicted and ground truth heatmap. To generate conventional PCK, use script `s_genPCK.lua` with specified result file from evaluation.  
-
+ 
 ### PCK plot ###
 
 We provide exact script used in paper for PCK plot generation. `drawCrossEval.lua`. 

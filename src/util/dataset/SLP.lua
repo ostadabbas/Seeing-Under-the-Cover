@@ -35,12 +35,17 @@ function Dataset:__init()   -- opt.idxRef.[train, valid, test],
                         {7,9,0},    {9,10,0},
                         {13,9,3},   {11,12,3},  {12,13,3},
                         {14,9,4},   {14,15,4},  {15,16,4}}
-    print('generating datasetPM dataset')
+    print('generating SLP dataset')
 
+    -- list all file names (abs) and joints_gts, cat them together
+    -- dtSizes list size of all datasets
+    -- trainIdxs and testIdxs,
+    -- if random , then validIdxs  separate  train part
     local imgPths = {}
     local tmpPths = {}
-    local idxBase_train = 0
-    local idxBase_test = 0
+    local idx_Base = 0
+    local idx_Base = 0
+    local idxBase = 0
     local idxsTest = torch.Tensor()
     local idxsTrValid = torch.Tensor()    -- train valid combined
     local idxsTrain = torch.Tensor()
@@ -59,11 +64,16 @@ function Dataset:__init()   -- opt.idxRef.[train, valid, test],
     self.centers = torch.Tensor()
     self.scales = torch.Tensor()
     local subjLs = dir.getdirectories(opt.dataDir)
-
+    --print('data dir is ', opt.dataDir)
+    --print('subjLs is', subjLs)
+    table.sort(subjLs)
+    --print('subjLs is', subjLs)
+    --print('idx_subTest_SLP', opt.idx_subTest_SLP)
+    -- check the subjLs is suitable for current set.
     if #subjLs < opt.idx_subTest_SLP[2] then
         print('there are subjLs',  #subjLs)
-
         print('test index surpasses the existing data')
+        os.exit()   -- quit the running
     end
 
     -- build up the train index and test indices.
@@ -121,16 +131,24 @@ function Dataset:__init()   -- opt.idxRef.[train, valid, test],
                 local subjId = tonumber(subjFd:match('%d%d%d%d%d')) -- fd names
                 --if utils.inTable(subjId, opt.idx_subTest_SLP) then
                 if utils.inTable(subjId, idx_subTest) then
-                    idxsTest= idxsTest:cat(utils.GenVecFromTo(idxBase_test+1, idxBase_test+n_smplTmp))
-                    idxsValid = idxsValid:cat(utils.GenVecFromTo(idxBase_test+1, idxBase_test + n_smplTmp))
-                    idxBase_test = idxBase_test + n_smplTmp
+                    idxsTest= idxsTest:cat(utils.GenVecFromTo(idx_Base +1, idx_Base +n_smplTmp))
+                    idxsValid = idxsValid:cat(utils.GenVecFromTo(idx_Base +1, idx_Base + n_smplTmp))
+                    idx_Base = idx_Base + n_smplTmp
                 elseif utils.inTable(subjId, idx_subTrain) then
-                    idxsTrain = idxsTrain:cat(utils.GenVecFromTo(idxBase_train+1, idxBase_train + n_smplTmp))
-                    idxBase_train = idxBase_train + n_smplTmp
+                    idxsTrain = idxsTrain:cat(utils.GenVecFromTo(idx_Base +1, idx_Base + n_smplTmp))
+                    idx_Base = idx_Base + n_smplTmp
                 end
             end
         end
     end
+    --print('the subj ls is ')
+    --print(subjLs)
+    --print('the idx_test idxs is')
+    --print(idxsTest)
+    --print('first idx_train 1620 is')
+    --for i =1,1620 do
+    --    print(idxsTrain[i])
+    --end
 
     if not opt.idxRef then
         opt.idxRef = {}

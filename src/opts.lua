@@ -8,18 +8,21 @@ local function parse(arg)
     cmd:text()
     cmd:text(' ---------- General options ------------------------------------')
     cmd:text()
-    cmd:option('-expID',       'ts1', 'Experiment ID')
+    cmd:option('-expID',       'exp', 'Experiment ID')
     cmd:option('-dataset',     'SLP', 'Dataset choice: mpii | flic | datasetPM, trigger different interfaces, AC2d for test purpose only ')
 
     cmd:option('-PMlab',     'danaLab', 'subset of PM dataset of different exp locations')       ------ PM related ------------
+    cmd:option('-covNmStr',   'uncover cover1 cover2', 'cover condition separated by space, replace converNms later')
     cmd:option('-coverNms',  {
         'uncover',
         'cover1',
         'cover2',
     }, 'cover name list')
     cmd:option('-ftNm',     '',   'fine tune name suffix for experiment, if yes, only last layer is in training')
-    cmd:option('-idx_subTest_SLP', {1, 7}, 'subject for test set idx_st idx_end')
-    cmd:option('-idx_subTrain_SLP', {1, 90}, 'subject idx for train')
+    cmd:option('-idx_subTest_SLP_str', '91 102', 'override the idx_subTest_SLP, to indicate the start and end number')
+    --cmd:option('-idx_subTest_SLP', {91, 102}, 'subject for test set idx_st idx_end')
+    cmd:option('-idx_subTrain_SLP_str', '91 102', 'override the idx_subTest_SLP, to indicate the start and end number')
+    --cmd:option('-idx_subTrain_SLP', {1, 90}, 'subject idx for train')
     cmd:option('-ifTsSpec',         false, 'if use specific index for testing, only for ac2d at this time')
     cmd:option('-dataDir',  '/home/jun/datasets', 'Data directory')
     --cmd:option('-expDir',   projectDir .. '/exp',  'Experiments directory')
@@ -106,6 +109,23 @@ local function parse(arg)
     if opt.dataset == 'datasetPM' or opt.dataset == 'SLP' then
         opt.dataDir = paths.concat(opt.dataDir, opt.PMlab)      -- add lab path to fd
     end
+
+    -- list args parsing s
+    local tmptab = {}
+    for word in opt.covNmStr:gmatch("%w+") do
+        tmptab[#tmptab +1] = word
+    end
+    opt.coverNms = tmptab
+    local tmptab1 = {}
+    for word in opt.idx_subTest_SLP_str:gmatch("%w+") do
+        tmptab1[#tmptab1 +1] = tonumber(word)
+    end
+    opt.idx_subTest_SLP = tmptab1
+    local tmptab2 = {}
+    for word in opt.idx_subTrain_SLP_str:gmatch("%w+") do
+        tmptab2[#tmptab2 +1] = tonumber(word)
+    end
+    opt.idx_subTrain_SLP = tmptab2
 
     if opt.dataset == 'AC2d' then   -- change expID if the datasets are list version, other 2 ds original expID
         opt.expID = opt.testLs[1]
@@ -307,3 +327,4 @@ end
 
 --print('idx_test_PM is', opt.idx_subTest_SLP)
 end
+

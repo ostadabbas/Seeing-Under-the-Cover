@@ -14,6 +14,11 @@ ref.log.train = Logger(paths.concat(opt.save, 'train.log'), opt.continue)   -- c
 ref.log.valid = Logger(paths.concat(opt.save, 'valid.log'), opt.continue)
 -- Main training loop
 
+
+print('1 and 945 idx image path')
+print(dataset:getPath(1))
+print(dataset:getPath(945))
+
 if opt.finalPredictions then
     opt.nEpochs = 0  -- clear the epoches automatically
 end
