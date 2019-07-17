@@ -11,7 +11,7 @@ Contact:
 
 [Sarah Ostadabbas](ostadabbas@ece.neu.edu)
 
-In this work, we employed [stacked hourglass](https://github.com/princeton-vl/pose-hg-train) to demonstrate our Under the Cover Imaging via Thermal Diffusion (UCITD) approach, while training the model on our sleep dataset, the first-ever large scale dataset on in-bed poses called “Simultaneously-collected multimodal Lying Pose (SLP)” (is pronounced as SLEEP). We interfaced our SLP dataset to original work to facilitate the training and testing process. Also 
+In this work, we employed [stacked hourglass](https://github.com/princeton-vl/pose-hg-train) to demonstrate our Under the Cover Imaging via Thermal Diffusion (UCITD) approach, while training the model on our sleep dataset, the first-ever large scale dataset on in-bed poses called “Simultaneously-collected multimodal Lying Pose (SLP)” (is pronounced as SLEEP). We interfaced our SLP dataset to original work to facilitate the training and testing process.  
 
 The SLP dataset and a pretrained model under home settings with all cover conditions are accessible at: [link](http://www.coe.neu.edu/Research/AClab/SLP). 
 
@@ -23,7 +23,7 @@ to run this code, make sure the following are installed:
 - hdf5
 - cudnn
 
-Download SLP dataset from our ACLab project webpage (link)[https://web.northeastern.edu/ostadabbas/2019/06/27/multimodal-in-bed-pose-estimation/]
+Download SLP dataset from our ACLab project webpage: [link](https://web.northeastern.edu/ostadabbas/2019/06/27/multimodal-in-bed-pose-estimation/)
 
 Download this repository. In opts.lua, there are several key parameters need to be taken care of including: 
 
