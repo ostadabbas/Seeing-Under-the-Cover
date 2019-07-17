@@ -1,16 +1,19 @@
+# SSeeing Under the Cover
+
 ![multiModa](images/multimodal_imaging.png)
 
-# Stacked Hourglass Networks for Human Pose on SLP 
-
 This is the training pipeline used for:
-Shuangjun Liu, Sarah Ostadabbas, 
-**Seeing Under the Cover: A Physics Guided Learning
-Approach for In-Bed Pose Estimation?**,
-[arXiv.1907.02161](https://arxiv.org/abs/1907.02161), MICCAI, 2019.
 
-In this work, we employ [stacked hourglass](https://github.com/princeton-vl/pose-hg-train) to demonstrate Under the Cover Imaging via Thermal Diffusion (UCITD) via training on our sleep dataset (SLP). We interfaced our SLP dataset to original work to facilitate the training and testing process. Also 
+Shuangjun Liu, Sarah Ostadabbas, "Seeing Under the Cover: A Physics Guided Learning Approach for In-Bed Pose Estimation," MICCAI, 2019. [arXiv.1907.02161](https://arxiv.org/abs/1907.02161)
 
-A pretrained model under home settings under all cover conditions are [provided](http://www.coe.neu.edu/Research/AClab/SLP). 
+Contact: 
+[Shuangjun Liu](shuliu@ece.neu.edu),
+
+[Sarah Ostadabbas](ostadabbas@ece.neu.edu)
+
+In this work, we employed [stacked hourglass](https://github.com/princeton-vl/pose-hg-train) to demonstrate Under the Cover Imaging via Thermal Diffusion (UCITD) while training the model on our sleep dataset (SLP). We interfaced our SLP dataset to original work to facilitate the training and testing process. Also 
+
+A pretrained model under home settings with all cover conditions are [provided](http://www.coe.neu.edu/Research/AClab/SLP). 
 
 ## Preparation 
 This code is emplemented on Torch7, 
@@ -83,6 +86,23 @@ Also , set legends accordingly for each of the test.  Result will be shown and s
 
 We also provide a script for video processing,  `s_genSkelVid.lua`. You need to specify the video you want to process as vidNm in the script.  To run, 
 `th s_genSkelVid.lua -branch datasetPM/danaLab/umich-stacked-hourglass-ftLast--cov-u12 -finalPredictions` 
+
+## Citation 
+If you found our work useful in your research please consider citing our paper:
+```
+@inproceedings{liu2019seeing,
+  title={Seeing Under the Cover: A Physics Guided Learning Approach for In-Bed Pose Estimation},
+  author={Liu, Shuangjun and Ostadabbas, Sarah},
+  booktitle={22nd International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI2019)},
+  pages={},
+  year={Oct 2019}
+}
+```
+
+
+## License 
+* This code is for non-commertial purpose only. For other uses please contact ACLab of NEU. 
+* No maintainence survice 
 
 ## Acknowledgements ##
 
